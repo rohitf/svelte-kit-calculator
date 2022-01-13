@@ -2,7 +2,7 @@
 	"name": "create-tailwindkit-ts",
 	"version": "0.3.0",
 	"private": true,
-  	"type": "module",
+	"type": "module",
 	"description": "A Sveltekit starter project with Typescript and Latest version of Tailwind pre-configured",
 	"bin": "./bin/cli.cjs",
 	"scripts": {
@@ -21,6 +21,7 @@
 	"author": "Kamell Perry",
 	"license": "MIT",
 	"devDependencies": {
+		"@sveltejs/adapter-netlify": "^1.0.0-next.38",
 		"@sveltejs/adapter-vercel": "next",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",

@@ -1,8 +1,8 @@
-import vercel from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-netlify';
 
 export default {
-  kit: {
-    adapter: vercel(),
-    target: '#svelte',
-  },
+	kit: {
+		adapter: adapter(),
+		target: '#svelte'
+	}
 };
