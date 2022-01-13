@@ -67,7 +67,7 @@
 <svelte:window on:keydown={handleInput} />
 <main class="h-screen grid justify-center bg-gray-600">
 	<div class="flex flex-col">
-		<p class="mt-8 text-lg text-white text-center">use keyboard or buttons below</p>
+		<p class="mt-8 text-lg text-white text-center">keyboard input or click buttons</p>
 		<!-- Calculator body -->
 		<div class="flex flex-col h-fit bg-gray-200 bg-opacity-80 p-5 mt-6 border border-gray-400 rounded-md">
 			<!-- Field where numbers and operations appear -->
