@@ -65,6 +65,9 @@
 </script>
 
 <svelte:window on:keydown={handleInput} />
+<svelte:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</svelte:head>
 <main class="h-screen grid justify-center bg-gray-600">
 	<div class="flex flex-col">
 		<p class="mt-8 text-lg text-white text-center">keyboard input or click buttons</p>
