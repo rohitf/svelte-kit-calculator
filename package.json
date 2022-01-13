@@ -1,11 +1,13 @@
 {
 	"name": "create-tailwindkit-ts",
 	"version": "0.3.0",
+	"private": true,
+  	"type": "module",
 	"description": "A Sveltekit starter project with Typescript and Latest version of Tailwind pre-configured",
 	"bin": "./bin/cli.cjs",
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "svelte-kit build",
+		"build": "svelte-kit build --verbose",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
@@ -19,6 +21,7 @@
 	"author": "Kamell Perry",
 	"license": "MIT",
 	"devDependencies": {
+		"@sveltejs/adapter-vercel": "next",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
@@ -35,6 +38,5 @@
 		"tailwindcss": "^3.0.1",
 		"tslib": "^2.3.1",
 		"typescript": "^4.4.3"
-	},
-	"type": "module"
+	}
 }
