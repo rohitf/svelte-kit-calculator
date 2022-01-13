@@ -1,28 +1,37 @@
-# SvelteKit
+# Sveltekit Tailwind & Typescript Template
 
-Example project using SvelteKit with the [SpaceX GraphQL API](https://api.spacex.land/graphql/), deployed to [Vercel](https://vercel.com).
+This is a starter template to jumpstart your project with Typescript and the latest version of [Tailwindcss](https://tailwindcss.com/), with minimal to no configuration needed.
 
-## Deploy Your Own
+## Installation
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fvercel%2Ftree%2Fmain%2Fexamples%2Fsveltekit&project-name=sveltekit-vercel&repository-name=sveltekit-vercel&demo-title=SvelteKit%20%2B%20Vercel&demo-description=SvelteKit%20app%20fetching%20data%20from%20the%20SpaceX%20GraphQL%20API.&demo-url=https%3A%2F%2Fsveltekit.examples.vercel.com%2F&demo-image=https%3A%2F%2Fsveltekit.examples.vercel.com%2Ftwitter.png)
-
-_Live Example: https://sveltekit.examples.vercel.com_
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install`, start a development server:
+Run this command in your terminal:
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+npx create-tailwindkit-ts@latest your-app-name-here
 ```
 
-## Building
+## Usage
 
-This uses the [Vercel Adapter](https://github.com/sveltejs/kit/tree/master/packages/adapter-vercel) for SvelteKit.
+If you want to enable dark mode you will have to modify the tailwind.config.cjs file
 
-```bash
-npm run build
+```javascript
+module.exports = {
+	purge: ['./src/**/*.svelte'],
+	darkMode: 'class', // or 'media'
+	theme: {
+		extend: {}
+	},
+	variants: {
+		extend: {}
+	},
+	plugins: []
+};
 ```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

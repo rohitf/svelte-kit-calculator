@@ -1,143 +1,120 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('https://api.spacex.land/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        query: `{
-            launchesPast(limit: 10) {
-                mission_name
-                launch_date_local
-                links {
-                    video_link
-                }
-            }
-        }`
-      })
-    });
+<script lang="ts">
+	const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+	const operations = {
+		'+': (a) => (b) => a + b,
+		'-': (a) => (b) => a - b,
+		'×': (a) => (b) => a * b,
+		'÷': (a) => (b) => a / b,
+		xⁿ: (a) => (b) => a ** b
+	} as const;
 
-    if (res.ok) {
-      const { data } = await res.json();
-      return {
-        props: {
-          launches: data.launchesPast
-        }
-      };
-    }
+	type Operator = keyof typeof operations;
+	const operators = Object.keys(operations) as Operator[];
 
-    return {
-      status: res.status,
-      error: new Error(`Error fetching GraphQL data`)
-    };
-  }
+	let displayResult = 0;
+	let waitingForValue = false;
+	let currentOp: Operator | null;
+	let currentCalculation: Function | null;
+
+	function clear() {
+		displayResult = 0;
+		currentOp = currentCalculation = null
+		waitingForValue = true
+	}
+
+	function solve() {
+		const result = currentCalculation(displayResult);
+		clear();
+		displayResult = result;
+	}
+
+	function numberPressed(n: number) {
+		displayResult = waitingForValue ? n : n + displayResult * 10;
+		waitingForValue &&= false
+	}
+
+	function applyArithmetic(op: Operator) {
+		// If user hasn't submitted the previous calculation via "=", then solve that first
+		if (currentCalculation && !waitingForValue) {
+			solve()
+		}
+	
+		currentCalculation = operations[op](displayResult);
+		currentOp = op;
+		waitingForValue = true;
+	}
+
+	// Support keyboard input
+	function handleInput({ key }: KeyboardEvent) {
+		if (!Number.isNaN(Number.parseInt(key))) {
+			numberPressed(Number.parseInt(key));
+		} else if (isOperator(key)) {
+			applyArithmetic(key);
+		} else if (key === 'Enter') {
+			solve();
+		} else if (key === 'Backspace' && !waitingForValue) {
+			displayResult = Math.trunc(displayResult / 10);
+		} else if (key === 'Escape') {
+			clear();
+		}
+	}
+
+	function isOperator(x): x is Operator {
+		return operators.includes(x);
+	}
 </script>
 
-<script>
-  export let launches;
-</script>
-
-<h1>SpaceX Launches</h1>
-<p>
-  This is an example <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://svelte.dev">SvelteKit</a
-  >
-  application fetching GraphQL data from the public
-  <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://api.spacex.land/graphql">SpaceX API</a
-  >. View source on
-  <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://github.com/leerob/sveltekit-graphql">GitHub</a
-  >.
-</p>
-<ul>
-  {#each launches as launch}
-    <li>
-      <a
-        class="card-link"
-        target="_blank"
-        rel="noopener"
-        href={launch.links.video_link}
-      >
-        <h2>{launch.mission_name}</h2>
-        <p>{new Date(launch.launch_date_local).toLocaleString()}</p>
-      </a>
-    </li>
-  {/each}
-</ul>
-<footer>
-  <p>
-    Created with <a
-      class="link"
-      target="_blank"
-      rel="noopener"
-      href="https://svelte.dev">SvelteKit</a
-    >
-    and deployed with
-    <a class="link" target="_blank" rel="noopener" href="https://vercel.com"
-      >▲ Vercel</a
-    >.
-  </p>
-</footer>
+<svelte:window on:keydown={handleInput} />
+<main class="h-screen grid justify-center bg-gray-600">
+	<div class="flex flex-col">
+		<p class="mt-8 text-lg text-white text-center">use keyboard or buttons below</p>
+		<!-- Calculator body -->
+		<div class="flex flex-col h-fit bg-gray-200 bg-opacity-80 p-5 mt-6 border border-gray-400 rounded-md">
+			<!-- Field where numbers and operations appear -->
+			<div class="bg-white px-3 py-2">{displayResult}</div>
+			<section class="flex mt-4 gap-4">
+				<!-- Numbers buttons -->
+				<div class="grid grid-rows-4 grid-cols-3 gap-4">
+					{#each numbers as digit}
+						<button
+							class="px-6 text-xl bg-white hover:bg-blue-100"
+							on:click={() => numberPressed(digit)}>{digit}</button
+						>
+					{/each}
+				</div>
+				<div>
+					<!-- Operations buttons -->
+					<div class="grid grid-rows-3 grid-cols-2 gap-4">
+						{#each operators as op}
+							<button
+								class:bg-orange-500={op === currentOp}
+								class="px-4 py-2 rounded-sm text-lg bg-orange-300 hover:bg-orange-500"
+								on:click={() => applyArithmetic(op)}>{op}</button
+							>
+						{/each}
+						<!-- Equals -->
+						<button
+							class="px-4 py-2 text-lg rounded-sm bg-blue-300 hover:bg-blue-400"
+							on:click={solve}
+						>
+							=
+						</button>
+					</div>
+					<!-- Clear -->
+					<button
+						class="w-full mt-4 px-4 py-2 text-lg border bg-slate-300"
+						on:click={clear}
+					>
+						🙅‍♂️🙅‍♂️🙅‍♂️🙅‍♂️
+					</button>
+				</div>
+			</section>
+		</div>
+	</div>
+</main>
 
 <style>
-  :global(body) {
-    font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-      monospace;
-    background-color: #fafafa;
-    max-width: 650px;
-    margin: 32px auto;
-    padding: 0 16px;
-  }
-  h1 {
-    letter-spacing: -0.025em;
-  }
-  h2 {
-    font-size: 18px;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 32px;
-  }
-  li {
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    background-color: white;
-    transition: 0.15s box-shadow ease-in-out;
-  }
-  li:hover {
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-  }
-  p {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.75;
-  }
-  a {
-    color: #0070f3;
-    text-decoration: none;
-  }
-  .card-link {
-    padding: 8px 24px;
-    display: block;
-  }
-  .link {
-    transition: 0.15s text-decoration ease-in-out;
-    color: #0761d1;
-  }
-  .link:hover {
-    text-decoration: underline;
-  }
+	main {
+		background: linear-gradient(180deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+	}
 </style>
